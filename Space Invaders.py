@@ -1,7 +1,6 @@
 # Importando módulos
 import turtle
 from turtle import *
-import math
 import pygame
 from time import sleep
 from random import randint
@@ -30,6 +29,21 @@ display.title('Space Invaders')
 display.bgcolor('black')
 display.tracer(0)
 
+def game_over_screen():
+    player.hideturtle()
+    enemy.hideturtle()
+    display.clear()
+    pygame.mixer.music.stop()
+    gameover = turtle.Turtle()
+    gameover.speed(0)
+    gameover.hideturtle()
+    gameover.penup()
+    gameover.color('black')
+    gameover.setposition(-200, 0)
+    gameover.write('GAMEOVER', font=('Atari Small', 80, 'normal'))
+    sleep(3)
+    exit()
+
 
 # Borda
 borda = turtle.Turtle()
@@ -47,16 +61,15 @@ borda.hideturtle()
 
 # Score
 score = 0
+default_aditional_socre = 10
 
 letra = turtle.Turtle()
 letra.color('white')
 letra.speed(0)
 letra.penup()
 letra.setposition(-280, -295)
-placar = f'Score:  {score}'
-letra.write(placar, False, align='left', font=('Atari Small', 28, 'normal'))
+letra.write(f'Score:  {score}', False, align='left', font=('Atari Small', 28, 'normal'))
 letra.hideturtle()
-
 
 # Vida
 number_of_lives = 2
@@ -64,16 +77,16 @@ number_of_lives = 2
 vidas = []
 
 # Placar de vidas
-for n in range(number_of_lives):
-    vidas.append(turtle.Turtle())
 x = 140
-for vida in vidas:
+for n in range(number_of_lives):
+    vida = turtle.Turtle()
     vida.shape('player1.gif')
     vida.speed(0)
     vida.hideturtle()
     vida.penup()
     vida.setposition(x, -275)
     vida.showturtle()
+    vidas.append(vida)
     x += 60
 
 
@@ -91,34 +104,30 @@ player.speed = 0
 number_of_enemies = 27
 # Lista vazia de inimigos
 enemies = []
+
 # Adicionar inimigos na lista
-for n in range(number_of_enemies):
-    # Criar inimigo
-    enemies.append(turtle.Turtle())
 
 # Local onde o primeiro vai spawnar
 enemy_x = -210
 enemy_y = 200
 enemy_n = 0
-
-# Estrutura para gerar inimigos
-for enemy in enemies:
+for n in range(number_of_enemies):
+    enemy = turtle.Turtle()
     enemy.shape('alien1.gif')
     enemy.penup()
     enemy.speed(0)
     x = enemy_x + (52 * enemy_n)
     y = enemy_y
     enemy.setposition(x, y)
-
-    # Atualizar numero de inimigos
+    
     enemy_n += 1
     if enemy_n == 9:
         enemy_y -= 50
         enemy_n = 0
-
-    # Velocidade
     enemyspeed = 0.1
 
+    # Criar inimigo
+    enemies.append(enemy)
 
 # Laser do Player
 laser = turtle.Turtle()
@@ -128,44 +137,36 @@ laser.speed(0)
 laser.setheading(90)
 laser.hideturtle()
 laser.goto(0, -400)
+# Definir Estado do laser
+# ready - preparado para atirar
+# fire - laser foi disparado
+laser.state = 'ready'
 
 # Velocidade do laser
 laserspeed = 2
 
-# Definir Estado do laser
-# ready - preparado para atirar
-# fire - laser foi disparado
-laserstate = 'ready'
-
 # Funções
-
-
 def left():
     player.speed = -0.5
 
-
 def right():
-
     player.speed = 0.5
-
 
 def mov_player():
     x = player.xcor()
     x += player.speed
-    if x < -277:
-        x = -277
-    if x > 277:
-        x = 277
+
+    if x < -277 or x > 277:
+        return
+
     player.setx(x)
 
 
 def fire_laser():
-    # Declarar global caso precise altera-lo
-    global laserstate
-    if laserstate == 'ready':
+    if laser.state == 'ready':
         som_laser.play()
         som_laser.set_volume(0.1)
-        laserstate = 'fire'
+        laser.state = 'fire'
 
         # Mover a bala para cima
         x = player.xcor()
@@ -174,13 +175,10 @@ def fire_laser():
         laser.showturtle()
 
 
-def collision(o1, o2):
-    d = math.sqrt(math.pow(o1.xcor()-o2.xcor(), 2) +
-                  math.pow(o1.ycor()-o2.ycor(), 2))
-    if d < 22:
-        return True
-    else:
-        return False
+def collision(object1, object2):
+    d = object1.distance(object2)
+    
+    return d < 22
 
 
 # Tecla de movimento
@@ -259,8 +257,7 @@ while True:
 
             # Resetar o laser
             laser.hideturtle()
-            laserstate = 'ready'
-            laser.setposition(0, 400)
+            laser.state = 'ready'
 
             # Resetar o inimigo
             x = randint(-240, 240)
@@ -268,11 +265,11 @@ while True:
             enemy.setposition(x, y)
 
             # Score
-            score += 10
+            score += default_aditional_socre
             placar = f'Score:  {score}'
             letra.clear()
             letra.write(placar, False, align='left',
-                        font=('Atari Small', 28, 'normal'))
+            font=('Atari Small', 28, 'normal'))
 
         # Verificar a colisão entre o player e o inimigo
         if collision(player, enemy):
@@ -307,22 +304,10 @@ while True:
 
             # Tela de gameover
             else:
-                player.hideturtle()
-                enemy.hideturtle()
-                display.clear()
-                pygame.mixer.music.stop()
-                gameover = turtle.Turtle()
-                gameover.speed(0)
-                gameover.hideturtle()
-                gameover.penup()
-                gameover.color('black')
-                gameover.setposition(-200, 0)
-                gameover.write('GAMEOVER', font=('Atari Small', 80, 'normal'))
-                sleep(3)
-                exit()
+                game_over_screen()
 
     # Mover a bala
-    if laserstate == 'fire':
+    if laser.state == 'fire':
         y = laser.ycor()
         y += laserspeed
         laser.sety(y)
@@ -330,4 +315,4 @@ while True:
     # Verificar passou do topo
     if laser.ycor() > 290:
         laser.hideturtle()
-        laserstate = 'ready'
+        laser.state = 'ready'
