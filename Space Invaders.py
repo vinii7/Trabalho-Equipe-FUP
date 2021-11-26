@@ -1,3 +1,9 @@
+# Grupo: Vinicius de Oliveira Costa     515129
+#        Luan Roger Santos Clementino   517173
+#        Kauã Magalhães Paraizo         514906
+#        João Augusto Silva Ferreira    514852
+
+# Kauã
 # Importando módulos
 import turtle
 from turtle import *
@@ -30,22 +36,6 @@ display.title('Space Invaders')
 display.bgcolor('black')
 display.tracer(0)
 
-
-def game_over_screen():
-    player.hideturtle()
-    enemy.hideturtle()
-    display.clear()
-    pygame.mixer.music.stop()
-    gameover = turtle.Turtle()
-    gameover.speed(0)
-    gameover.hideturtle()
-    gameover.penup()
-    gameover.color('black')
-    gameover.setposition(-200, 0)
-    gameover.write('GAMEOVER', font=('Atari Small', 80, 'normal'))
-    sleep(3)
-    exit()
-
 # Borda
 borda = turtle.Turtle()
 borda.speed(0)
@@ -54,7 +44,7 @@ borda.penup()
 borda.setposition(-300, -300)
 borda.pendown()
 borda.pensize(3)
-for lado in range(0, 4):
+for lado in range(4):
     borda.forward(600)
     borda.left(90)
 borda.hideturtle()
@@ -99,9 +89,9 @@ player.penup()
 player.speed(0)
 player.setposition(0, -200)
 player.setheading(90)
-player.shapesize
 player.speed = 0
 
+# Roger
 # Numero de inimigos
 number_of_enemies = 27
 # Lista vazia de inimigos
@@ -152,7 +142,24 @@ laserspeed = 2
 # fire - laser foi disparado
 laserstate = 'ready'
 
+# João Augusto
 # Funções
+
+
+def game_over_screen():
+    player.hideturtle()
+    enemy.hideturtle()
+    display.clear()
+    pygame.mixer.music.stop()
+    gameover = turtle.Turtle()
+    gameover.speed(0)
+    gameover.hideturtle()
+    gameover.penup()
+    gameover.color('black')
+    gameover.setposition(-200, 0)
+    gameover.write('GAMEOVER', font=('Atari Small', 80, 'normal'))
+    sleep(3)
+    exit()
 
 
 def left():
@@ -204,7 +211,7 @@ onkeypress(left, 'Left')
 onkeypress(right, 'Right')
 onkeypress(fire_laser, 'space')
 
-
+# Vinicius
 # Loop Principal
 while True:
 
@@ -322,19 +329,7 @@ while True:
 
             # Tela de gameover
             else:
-                player.hideturtle()
-                enemy.hideturtle()
-                display.clear()
-                pygame.mixer.music.stop()
-                gameover = turtle.Turtle()
-                gameover.speed(0)
-                gameover.hideturtle()
-                gameover.penup()
-                gameover.color('black')
-                gameover.setposition(-200, 0)
-                gameover.write('GAMEOVER', font=('Atari Small', 80, 'normal'))
-                sleep(3)
-                exit()
+                game_over_screen()
 
     # Mover a bala
     if laserstate == 'fire':
