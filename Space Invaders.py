@@ -29,6 +29,7 @@ display.title('Space Invaders')
 display.bgcolor('black')
 display.tracer(0)
 
+
 def game_over_screen():
     player.hideturtle()
     enemy.hideturtle()
@@ -68,7 +69,8 @@ letra.color('white')
 letra.speed(0)
 letra.penup()
 letra.setposition(-280, -295)
-letra.write(f'Score:  {score}', False, align='left', font=('Atari Small', 28, 'normal'))
+letra.write(f'Score:  {score}', False, align='left',
+            font=('Atari Small', 28, 'normal'))
 letra.hideturtle()
 
 # Vida
@@ -119,7 +121,7 @@ for n in range(number_of_enemies):
     x = enemy_x + (52 * enemy_n)
     y = enemy_y
     enemy.setposition(x, y)
-    
+
     enemy_n += 1
     if enemy_n == 9:
         enemy_y -= 50
@@ -146,11 +148,15 @@ laser.state = 'ready'
 laserspeed = 2
 
 # Funções
+
+
 def left():
     player.speed = -0.5
 
+
 def right():
     player.speed = 0.5
+
 
 def mov_player():
     x = player.xcor()
@@ -177,7 +183,7 @@ def fire_laser():
 
 def collision(object1, object2):
     d = object1.distance(object2)
-    
+
     return d < 22
 
 
@@ -269,7 +275,7 @@ while True:
             placar = f'Score:  {score}'
             letra.clear()
             letra.write(placar, False, align='left',
-            font=('Atari Small', 28, 'normal'))
+                        font=('Atari Small', 28, 'normal'))
 
         # Verificar a colisão entre o player e o inimigo
         if collision(player, enemy):
