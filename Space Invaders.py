@@ -122,7 +122,7 @@ for enemy in enemies:
         enemy_n = 0
 
     # Velocidade
-    enemyspeed = 0.1
+    enemyspeed = 0.2
 
 
 # Laser do Player
@@ -167,7 +167,6 @@ def left():
 
 
 def right():
-
     player.speed = 0.5
 
 
@@ -260,7 +259,7 @@ while True:
                 e.sety(y)
 
             # Mudar a direção dos inimigos
-            enemyspeed *= -1
+            enemyspeed *= -1.3
 
         # Mover para baixo e limitar fronteira do lado esquerdo
         if enemy.xcor() < -280:
@@ -271,7 +270,7 @@ while True:
                 e.sety(y)
 
             # Mudar a direção dos inimigos
-            enemyspeed *= -1
+            enemyspeed *= -1.3
 
         # Verificar a colisão entre o laser e o inimigo
         if collision(laser, enemy):
@@ -307,7 +306,6 @@ while True:
 
                 # Estrutura para gerar inimigos
                 for enemy in enemies:
-                    enemy.color('red')
                     enemy.shape('alien1.gif')
                     enemy.penup()
                     enemy.speed(0)
