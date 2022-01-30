@@ -8,9 +8,16 @@
 import turtle
 from turtle import *
 import math
-import pygame
 from time import sleep
 from random import randint
+from entityes.arena import Arena
+
+from entityes.player import Player
+
+from system_managers.display_manager import DisplayManager
+from system_managers.sound_manager import SoundManager
+from text_entityes.life_system import LifeSystem
+from text_entityes.score import Score
 
 # Registrar Shapes
 register_shape('player1.gif')
@@ -19,77 +26,29 @@ register_shape('laser1.gif')
 
 
 # Musica
-pygame.init()
-pygame.mixer.music.load('music.wav')
-pygame.mixer.music.set_volume(0.05)
-pygame.mixer.music.play(-1)
-
-# Sons
-som_laser = pygame.mixer.Sound('shoot.wav')
-som_invader_kill = pygame.mixer.Sound('invaderkilled.wav')
+sound_manager = SoundManager()
+sound_manager.InitSound()
+sound_manager.PlayMusic()
 
 
 # Display
-display = turtle.Screen()
-display.setup(700, 700)
-display.title('Space Invaders')
-display.bgcolor('black')
-display.tracer(0)
+DisplayManager.InitDisplay()
 
-# Borda
-borda = turtle.Turtle()
-borda.speed(0)
-borda.color('white')
-borda.penup()
-borda.setposition(-300, -300)
-borda.pendown()
-borda.pensize(3)
-for lado in range(4):
-    borda.forward(600)
-    borda.left(90)
-borda.hideturtle()
+# Arena
+arena = Arena()
+arena.DrawnArena()
 
 
 # Score
-score = 0
+score = Score("white", (-280, -295))
+score.Drawn()
 
-letra = turtle.Turtle()
-letra.color('white')
-letra.speed(0)
-letra.penup()
-letra.setposition(-280, -295)
-placar = f'Score:  {score}'
-letra.write(placar, False, align='left', font=('Atari Small', 28, 'normal'))
-letra.hideturtle()
-
-
-# Vida
-number_of_lives = 2
-# Lista vazia de vidas
-vidas = []
-
-# Placar de vidas
-for n in range(number_of_lives):
-    vidas.append(turtle.Turtle())
-x = 140
-for vida in vidas:
-    vida.shape('player1.gif')
-    vida.speed(0)
-    vida.hideturtle()
-    vida.penup()
-    vida.setposition(x, -275)
-    vida.showturtle()
-    x += 60
+life_system = LifeSystem()
+life_system.Init()
 
 
 # Criar Player
-player = turtle.Turtle()
-player.shape('player1.gif')
-player.penup()
-player.speed(0)
-player.setposition(0, -200)
-player.setheading(90)
-player.speed = 0
+player = Player()
 
 # Roger
 # Numero de inimigos
@@ -122,7 +81,7 @@ for enemy in enemies:
         enemy_n = 0
 
     # Velocidade
-    enemyspeed = 0.2
+    enemyspeed = 2
 
 
 # Laser do Player
@@ -145,21 +104,6 @@ laserstate = 'ready'
 # João Augusto
 # Funções
 
-
-def game_over_screen():
-    player.hideturtle()
-    enemy.hideturtle()
-    display.clear()
-    pygame.mixer.music.stop()
-    gameover = turtle.Turtle()
-    gameover.speed(0)
-    gameover.hideturtle()
-    gameover.penup()
-    gameover.color('black')
-    gameover.setposition(-200, 0)
-    gameover.write('GAMEOVER', font=('Atari Small', 80, 'normal'))
-    sleep(3)
-    exit()
 
 
 def left():
@@ -184,8 +128,7 @@ def fire_laser():
     # Declarar global caso precise altera-lo
     global laserstate
     if laserstate == 'ready':
-        som_laser.play()
-        som_laser.set_volume(0.1)
+        sound_manager.PlayLaserSong()
         laserstate = 'fire'
 
         # Mover a bala para cima
@@ -215,7 +158,7 @@ onkeypress(fire_laser, 'space')
 while True:
 
     # Update na tela a cada laço
-    display.update()
+    DisplayManager.UpdateDisplay()
 
     # Movimentar o jogador
     mov_player()
@@ -243,7 +186,7 @@ while True:
                     enemy_n = 0
 
                 # Velocidade do inimigo
-                enemyspeed = 0.1
+                enemyspeed = 2
 
         # Mover inimigo no eixo X
         x = enemy.xcor()
@@ -275,8 +218,7 @@ while True:
         # Verificar a colisão entre o laser e o inimigo
         if collision(laser, enemy):
             # Som
-            som_invader_kill.play()
-            som_invader_kill.set_volume(0.1)
+            sound_manager.PlayInvaderKillSong()
 
             # Resetar o laser
             laser.hideturtle()
@@ -289,16 +231,12 @@ while True:
             enemy.setposition(x, y)
 
             # Score
-            score += 10
-            placar = f'Score:  {score}'
-            letra.clear()
-            letra.write(placar, False, align='left',
-                        font=('Atari Small', 28, 'normal'))
+            score.IncreaseScore()
 
         # Verificar a colisão entre o player e o inimigo
         if collision(player, enemy):
             # Condição para numero de vidas
-            if number_of_lives > 0:
+            if life_system.life_numb > 0:
 
                 # Local onde o primeiro vai spawnar
                 enemy_x = -210
@@ -319,15 +257,14 @@ while True:
                         enemy_y -= 50
                         enemy_n = 0
 
-                    enemyspeed = 0.1
+                    enemyspeed = 2
 
-                number_of_lives -= 1
-                vidas[number_of_lives].hideturtle()
+                life_system.LoseLife()
                 continue
 
             # Tela de gameover
             else:
-                game_over_screen()
+                DisplayManager.GameOverScreen()
 
     # Mover a bala
     if laserstate == 'fire':
