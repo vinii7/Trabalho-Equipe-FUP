@@ -8,22 +8,19 @@
 import turtle
 from turtle import *
 import math
-from time import sleep
 from random import randint
-from entityes.arena import Arena
+from entities.arena import Arena
+from entities.game_shapes import GameShapes
 
-from entityes.player import Player
+from entities.player import Player
 
 from system_managers.display_manager import DisplayManager
 from system_managers.sound_manager import SoundManager
-from text_entityes.life_system import LifeSystem
-from text_entityes.score import Score
+from ui.life_status import LifeStatus
+from ui.score import Score
 
-# Registrar Shapes
-register_shape('player1.gif')
-register_shape('alien1.gif')
-register_shape('laser1.gif')
-
+# Inicializar Shapes
+GameShapes.InitAllShapes()
 
 # Musica
 sound_manager = SoundManager()
@@ -43,7 +40,7 @@ arena.DrawnArena()
 score = Score("white", (-280, -295))
 score.Drawn()
 
-life_system = LifeSystem()
+life_system = LifeStatus()
 life_system.Init()
 
 

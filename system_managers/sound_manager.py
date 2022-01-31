@@ -6,9 +6,9 @@ class SoundManager:
     _som_invader_kill = None
 
     def InitSound(self):
-        music_song_path = os.path.join(os.path.dirname(__file__), 'music_assets/music.wav')
-        laser_song_path = os.path.join(os.path.dirname(__file__), 'music_assets/shoot.wav')
-        invader_song_path = os.path.join(os.path.dirname(__file__), 'music_assets/invaderkilled.wav')
+        music_song_path = 'assets/sounds/music.wav'
+        laser_song_path = os.path.join('assets/sounds/shoot.wav')
+        invader_song_path = os.path.join('assets/sounds/invaderkilled.wav')
 
         pygame.init()
         pygame.mixer.music.load(music_song_path)

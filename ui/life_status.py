@@ -1,9 +1,9 @@
 from turtle import Turtle
 from typing import List
-from entityes.models.life import Life
+from entities.models.life import Life
 
 
-class LifeSystem:
+class LifeStatus:
     vidas: List[Turtle] = []
     life_numb: int = None
     init_x_poss: int = 140

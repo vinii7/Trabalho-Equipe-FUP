@@ -1,4 +1,4 @@
-from text_entityes.font_renderer import FontRenderer
+from ui.font_renderer import FontRenderer
 
 
 class Score(FontRenderer):
