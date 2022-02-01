@@ -12,7 +12,6 @@ class SoundManager:
 
         pygame.init()
         pygame.mixer.music.load(music_song_path)
-        pygame.mixer.music.set_volume(0.05)
 
         # Sons
         self._som_laser = pygame.mixer.Sound(laser_song_path)
@@ -26,8 +25,6 @@ class SoundManager:
     
     def PlayLaserSong(self):
         self._som_laser.play()
-        self._som_laser.set_volume(0.1)
 
     def PlayInvaderKillSong(self):
         self._som_invader_kill.play()
-        self._som_invader_kill.set_volume(0.1)
