@@ -1,4 +1,3 @@
-from operator import index
 from typing import List, Tuple
 
 from entities.enemy import Enemy
@@ -53,7 +52,7 @@ class EnemySystem:
     _enemies_move_speed: float = 0.3
 
     def __init__(self):
-        self._enemies = _EnemyLineup((-210, 200))
+        self._enemies = _EnemyLineup((-210, 250))
 
     def SpawnAllEnemies(self):
         self._enemies.PopulateList()
@@ -65,7 +64,7 @@ class EnemySystem:
             if(enemy.xcor() > 280 or enemy.xcor() < -280):
                 self._DownRow()
             
-            if(enemy.ycor() < -200 and enemy.isvisible()):
+            if(enemy.ycor() < -220 and enemy.isvisible()):
                 self.ResetLineup()
                 
     def _DownRow(self):
