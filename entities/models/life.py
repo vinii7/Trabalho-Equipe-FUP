@@ -1,9 +1,11 @@
 from turtle import Turtle
 
+from entities.game_shapes import GameShapes
+
 
 class Life(Turtle):
     def __init__(self, x_poss: int):
-        super().__init__("player1.gif", 1, True)
+        super().__init__(GameShapes.player_shape, 1, True)
 
         super().speed(0)
         super().hideturtle()

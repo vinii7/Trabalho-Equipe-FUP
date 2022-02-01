@@ -1,7 +1,7 @@
 from time import sleep
 import turtle
 
-from text_entityes.game_over_text import GameOverText
+from ui.game_over_text import GameOverText
 
 class DisplayManager():
     @staticmethod
@@ -22,7 +22,7 @@ class DisplayManager():
     @staticmethod
     def GameOverScreen():
         DisplayManager.ClearDisplay()
-        game_over_text = GameOverText("black", (-200, 0), "GAMEOVER")
+        game_over_text = GameOverText("black", (-200, 0))
         game_over_text.Drawn()
         sleep(3)
         exit()
