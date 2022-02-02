@@ -1,6 +1,7 @@
 from typing import List, Tuple
 
 from entities.enemy import Enemy
+from utils.void_object_coordinates import VoidObjectCoordinates
 
 
 class _EnemyLineup:
@@ -47,7 +48,7 @@ class _EnemyLineup:
             y_poss -= self.spacing
         
 
-class EnemySystem:
+class EnemyManager:
     _enemies: _EnemyLineup
     _enemies_move_speed: float = 0.3
 
@@ -59,12 +60,14 @@ class EnemySystem:
 
     def UpdateEnemiesPoss(self):
         for enemy in self._enemies.enemies_lineup:
+            if(not enemy.isvisible()): continue
+
             enemy.setx(enemy.xcor() + self._enemies_move_speed)
 
             if(enemy.xcor() > 280 or enemy.xcor() < -280):
                 self._DownRow()
             
-            if(enemy.ycor() < -220 and enemy.isvisible()):
+            if(enemy.ycor() < -220):
                 self.ResetLineup()
                 
     def _DownRow(self):
@@ -89,7 +92,7 @@ class EnemySystem:
         for enemy in self._enemies.enemies_lineup:
             if(enemy.CheckCollision(object)):
                 wasCollision = True
-                self._enemies.enemies_lineup[enemy_index_count].setpos(0, -400)
+                self._enemies.enemies_lineup[enemy_index_count].goto(VoidObjectCoordinates.ENEMY_COORDINATE)
                 self._enemies.enemies_lineup[enemy_index_count].hideturtle()
 
             enemy_index_count += 1

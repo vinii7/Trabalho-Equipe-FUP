@@ -1,8 +1,6 @@
 from turtle import Turtle
 
-
-#interface
-class ICollideable:
-    #Parameter needs to inherit from Turtle and ICollideable
+class Collideable:
+    #Parameter needs to inherit from Turtle and Collideable
     def CheckCollision(self: Turtle, object: Turtle, tolerance: int = 22) -> bool:
         return self.distance(object) < tolerance
