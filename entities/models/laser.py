@@ -2,16 +2,18 @@ from enum import Enum
 from turtle import Turtle
 
 from entities.game_shapes import GameShapes
-from entities.models.i_collideable import ICollideable
+from system_managers.sound_manager import SoundManager
+from utils.collideable import Collideable
+from utils.void_object_coordinates import VoidObjectCoordinates
 
 class LaserState(Enum):
     READY = 0
     FIRE = 1
 
-#ICollideable is not implemented here
-class Laser(Turtle, ICollideable):
-    laser_speed: int = 3
-    state: LaserState = LaserState.READY
+#Collideable is not implemented here
+class Laser(Turtle, Collideable):
+    _laser_speed: int = 3
+    _state: LaserState = LaserState.READY
 
     def __init__(self) -> None:
         super().__init__(GameShapes.laser_shape, 1, True)
@@ -20,21 +22,22 @@ class Laser(Turtle, ICollideable):
         super().speed(0)
         super().setheading(90)
         super().hideturtle()
-        super().goto(-400, 0)
+        super().goto(VoidObjectCoordinates.LASER_COORDINATE)
     
     def Fire(self, initial_location: int):
-        if(self.state != LaserState.READY):
+        if(self._state != LaserState.READY):
             return
 
-        self.state = LaserState.FIRE
+        self._state = LaserState.FIRE
         super().setx(initial_location)
         super().sety(-180)
         super().showturtle()
+        SoundManager.PlayLaserSong()
     
     def Dispose(self):
         super().hideturtle()
-        self.state = LaserState.READY
-        super().goto(-400, 0)
+        super().goto(VoidObjectCoordinates.LASER_COORDINATE)
+        self._state = LaserState.READY
     
     def GoUp(self):
-        super().sety(super().ycor() + self.laser_speed)
+        super().sety(super().ycor() + self._laser_speed)
