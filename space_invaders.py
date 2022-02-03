@@ -1,6 +1,4 @@
 # Importando módulos
-from turtle import *
-
 from entities.arena import Arena
 from entities.game_shapes import GameShapes
 from entities.player import Player
@@ -46,8 +44,19 @@ player.ConfigureKeyBindings()
 enemy_system = EnemyManager()
 enemy_system.SpawnAllEnemies()
 
-laser_colision = lambda : (score.IncreaseScore(), SoundManager.PlayInvaderKillSong(), player.laser.Dispose())
-player_colision = lambda : (life_system.LoseLife(), enemy_system.ResetLineup())
+#region Funções de colisão
+def laser_collision():
+    score.IncreaseScore() 
+    SoundManager.PlayInvaderKillSong()
+    player.laser.Dispose()
+
+def player_collision():
+    life_system.LoseLife()
+    if(life_system.life_numb < 0):
+            SoundManager.StopMusic()
+            DisplayManager.GameOverScreen()
+    enemy_system.ResetLineup()
+#endregion
 
 # Loop Principal
 while True:
@@ -57,7 +66,4 @@ while True:
     
     enemy_system.UpdateEnemiesPoss()
 
-    enemy_system.CheckCollisionInFrame((laser_colision, player_colision), player.laser, player)
-
-    if(life_system.life_numb < 0):
-        DisplayManager.GameOverScreen()
+    enemy_system.CheckCollisionInFrame((laser_collision, player_collision), player.laser, player)

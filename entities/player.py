@@ -2,7 +2,7 @@ from turtle import Turtle, listen, onkeypress
 
 from entities.game_shapes import GameShapes
 from utils.collideable import Collideable
-from entities.models.laser import Laser, LaserState
+from entities.laser import Laser, LaserState
 
 #Collideable is not implemented here
 class Player(Turtle, Collideable):
@@ -40,11 +40,7 @@ class Player(Turtle, Collideable):
         super().setx(x)
 
         #Posição do laser
-        if(self.laser._state == LaserState.FIRE):
-            self.laser.GoUp()
-
-            if(self.laser.ycor() > 290):
-                self.laser.Dispose()
+        self.laser.GoUp()
 
     def FireLaser(self):
         self.laser.Fire(self.xcor())

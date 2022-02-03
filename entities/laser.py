@@ -24,7 +24,7 @@ class Laser(Turtle, Collideable):
         super().hideturtle()
         super().goto(VoidObjectCoordinates.LASER_COORDINATE)
     
-    def Fire(self, initial_location: int):
+    def Fire(self, initial_location: float):
         if(self._state != LaserState.READY):
             return
 
@@ -40,4 +40,8 @@ class Laser(Turtle, Collideable):
         self._state = LaserState.READY
     
     def GoUp(self):
-        super().sety(super().ycor() + self._laser_speed)
+        if(self._state == LaserState.FIRE):
+            super().sety(super().ycor() + self._laser_speed)
+
+            if(super().ycor() >= 290):
+                self.Dispose()
