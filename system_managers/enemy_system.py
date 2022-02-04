@@ -12,7 +12,7 @@ class _EnemyLineup:
 
     def __init__(self, initial_poss: Tuple,
      enemies_per_row = 9,
-     row_ammount = 5,
+     row_ammount = 3,
      spacing = 52):
         self.initial_poss = initial_poss
         self.enemies_per_row = enemies_per_row

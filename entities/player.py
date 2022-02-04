@@ -26,9 +26,9 @@ class Player(Turtle, ICollideable):
 
     #region Moviments and Actions
     def MoveLeft(self):
-        self.speed = -0.3
+        self.speed = -0.5
     def MoveRight(self):
-        self.speed = 0.3
+        self.speed = 0.5
 
     def UpdatePlayerState(self):
         #Posição do player
