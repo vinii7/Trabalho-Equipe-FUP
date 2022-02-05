@@ -47,7 +47,7 @@ class _EnemyLineup:
             y_poss -= self.spacing
         
 
-class EnemySystem:
+class EnemyManager:
     _enemies: _EnemyLineup
     _enemies_move_speed: float = 0.3
 
