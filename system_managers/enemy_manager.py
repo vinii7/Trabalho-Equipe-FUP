@@ -1,29 +1,30 @@
 from typing import List, Tuple
 
 from entities.enemy import Enemy
+from utils.void_object_coordinates import VoidObjectCoordinates
 
 
 class _EnemyLineup:
     enemies_lineup: List[Enemy] = []
-    initial_poss: Tuple # cordenadas (x, y)
+    initial_poss: Tuple[float, float] # cordenadas (x, y)
     enemies_per_row: int
-    row_ammount: int
+    column_amount: int
     spacing: int
 
     def __init__(self, initial_poss: Tuple,
      enemies_per_row = 9,
-     row_ammount = 3,
+     column_amount = 3,
      spacing = 52):
         self.initial_poss = initial_poss
         self.enemies_per_row = enemies_per_row
-        self.row_ammount = row_ammount
+        self.column_amount = column_amount
         self.spacing = spacing
 
     def PopulateList(self):
         x_poss: int = self.initial_poss[0]
         y_poss: int = self.initial_poss[1]
 
-        for _ in range(self.row_ammount):
+        for _ in range(self.column_amount):
             for index in range(self.enemies_per_row):
                 current_enemy = Enemy()
 
@@ -38,7 +39,7 @@ class _EnemyLineup:
         y_poss: int = self.initial_poss[1]
 
         enemies_lenght = 0
-        for _ in range(self.row_ammount):
+        for _ in range(self.column_amount):
             for index in range(self.enemies_per_row):
                 self.enemies_lineup[enemies_lenght].setposition(x_poss + self.spacing * index, y_poss)
                 self.enemies_lineup[enemies_lenght].showturtle()
@@ -47,7 +48,7 @@ class _EnemyLineup:
             y_poss -= self.spacing
         
 
-class EnemySystem:
+class EnemyManager:
     _enemies: _EnemyLineup
     _enemies_move_speed: float = 0.3
 
@@ -59,12 +60,14 @@ class EnemySystem:
 
     def UpdateEnemiesPoss(self):
         for enemy in self._enemies.enemies_lineup:
+            if(not enemy.isvisible()): continue
+
             enemy.setx(enemy.xcor() + self._enemies_move_speed)
 
             if(enemy.xcor() > 280 or enemy.xcor() < -280):
                 self._DownRow()
             
-            if(enemy.ycor() < -220 and enemy.isvisible()):
+            if(enemy.ycor() < -220):
                 self.ResetLineup()
                 
     def _DownRow(self):
@@ -82,16 +85,16 @@ class EnemySystem:
                 callbacks[index_counter]()
             index_counter += 1
 
-    def _CheckCollisionAllEnemies(self, object) -> bool:
-        wasCollision = False 
+    def _CheckCollisionAllEnemies(self, entity) -> bool:
+        was_collision = False 
 
         enemy_index_count = 0
         for enemy in self._enemies.enemies_lineup:
-            if(enemy.CheckCollision(object)):
-                wasCollision = True
-                self._enemies.enemies_lineup[enemy_index_count].setpos(0, -400)
+            if(enemy.CheckCollision(entity)):
+                was_collision = True
+                self._enemies.enemies_lineup[enemy_index_count].goto(VoidObjectCoordinates.ENEMY_COORDINATE)
                 self._enemies.enemies_lineup[enemy_index_count].hideturtle()
 
             enemy_index_count += 1
 
-        return wasCollision
+        return was_collision
