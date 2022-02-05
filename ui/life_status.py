@@ -1,6 +1,8 @@
 from turtle import Turtle
 from typing import List
 from entities.models.life import Life
+from system_managers.display_manager import DisplayManager
+from system_managers.sound_manager import SoundManager
 
 
 class LifeStatus:
