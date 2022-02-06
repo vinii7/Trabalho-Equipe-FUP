@@ -7,6 +7,6 @@ class Score(FontRenderer):
     def __init__(self, color: str, initial_possition: tuple):
         super().__init__(color, initial_possition, f"Score: {self._score}")
     
-    def IncreaseScore(self, ammount: int = 10):
-        self._score += ammount
+    def IncreaseScore(self, amount: int = 10):
+        self._score += amount
         super().setText(f"Score: {self._score}")

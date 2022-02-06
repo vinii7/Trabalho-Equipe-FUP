@@ -1,4 +1,5 @@
 # Importando módulos
+import wave
 from entities.arena import Arena
 from entities.game_shapes import GameShapes
 from entities.player import Player
@@ -7,6 +8,7 @@ from system_managers.enemy_manager import EnemyManager
 from system_managers.sound_manager import SoundManager
 from ui.life_status import LifeStatus
 from ui.score import Score
+from ui.waves_counter import WaveCounter
 
 # Grupo: Vinicius de Oliveira Costa     515129
 #        Luan Roger Santos Clementino   517173
@@ -28,13 +30,15 @@ DisplayManager.InitDisplay()
 arena = Arena()
 arena.DrawnArena()
 
-# Score
+# UI
 score = Score("white", (-280, -295))
 score.Drawn()
 
-#Vida
 life_system = LifeStatus()
 life_system.Init()
+
+wave_counter: WaveCounter = WaveCounter("white", (-280, 250))
+wave_counter.Drawn()
 
 # Player
 player = Player()
@@ -58,12 +62,16 @@ def player_collision():
     enemy_system.ResetLineup()
 #endregion
 
+def onNextWave():
+    wave_counter.IncreaseWave()
+    enemy_system.IncrementEmenySpeed(wave_counter.wave/100)
+
 # Loop Principal
 while True:
     DisplayManager.UpdateDisplay()
 
     player.UpdatePlayerState()
     
-    enemy_system.UpdateEnemiesPoss()
+    enemy_system.UpdateEnemiesPoss(onResetCallback=onNextWave)
 
     enemy_system.CheckCollisionInFrame((laser_collision, player_collision), player.laser, player)
