@@ -2,14 +2,15 @@ from turtle import Turtle, listen, onkeypress
 
 from entities.game_shapes import GameShapes
 from utils.collideable import Collideable
-from entities.laser import Laser, LaserState
+from entities.laser import Laser
 
 #Collideable is not implemented here
 class Player(Turtle, Collideable):
+    name: str
     speed: float = 0.3
     laser: Laser
 
-    def __init__(self):
+    def __init__(self, name: str):
         super().__init__(GameShapes.player_shape, 1, True)
         super().penup()
         super().speed(0)
@@ -17,6 +18,7 @@ class Player(Turtle, Collideable):
         super().setheading(90)
 
         self.laser = Laser()
+        self.name = name
     
     def ConfigureKeyBindings(self):
         listen()

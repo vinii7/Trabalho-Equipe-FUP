@@ -58,6 +58,7 @@ class EnemyManager:
         self._enemies.PopulateList()
 
     def UpdateEnemiesPoss(self, onResetCallback = None):
+        enemy_interator = 0
         for enemy in self._enemies.enemies_lineup:
             enemy.setx(enemy.xcor() + self._enemies_move_speed)
 
@@ -66,6 +67,11 @@ class EnemyManager:
             
             if(enemy.ycor() < -220 and enemy.isvisible()):
                 self.ResetLineup(onResetCallback=onResetCallback)
+            
+            if(not enemy.isvisible()):
+                enemy_interator += 1
+                if(enemy_interator == len(self._enemies.enemies_lineup)):
+                    self.ResetLineup(onResetCallback=onResetCallback)
                 
     def _DownRow(self):
         for enemy in self._enemies.enemies_lineup:
@@ -80,7 +86,8 @@ class EnemyManager:
 
     def IncrementEmenySpeed(self, value: float):
         self._enemies_move_speed += value
-        print(f"Velocidade do inimigo: {self._enemies_move_speed}")
+        if(self._enemies_move_speed < 0):
+            self._enemies_move_speed *= -1
 
     def CheckCollisionInFrame(self, callbacks: Tuple, *objects):
         index_counter = 0
