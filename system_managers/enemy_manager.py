@@ -7,23 +7,23 @@ class _EnemyLineup:
     enemies_lineup: List[Enemy] = []
     initial_poss: Tuple # cordenadas (x, y)
     enemies_per_row: int
-    row_ammount: int
+    column_amount: int
     spacing: int
 
     def __init__(self, initial_poss: Tuple,
      enemies_per_row = 9,
-     row_ammount = 5,
+     column_amount = 5,
      spacing = 52):
         self.initial_poss = initial_poss
         self.enemies_per_row = enemies_per_row
-        self.row_ammount = row_ammount
+        self.column_amount = column_amount
         self.spacing = spacing
 
     def PopulateList(self):
         x_poss: int = self.initial_poss[0]
         y_poss: int = self.initial_poss[1]
 
-        for _ in range(self.row_ammount):
+        for _ in range(self.column_amount):
             for index in range(self.enemies_per_row):
                 current_enemy = Enemy()
 
@@ -38,7 +38,7 @@ class _EnemyLineup:
         y_poss: int = self.initial_poss[1]
 
         enemies_lenght = 0
-        for _ in range(self.row_ammount):
+        for _ in range(self.column_amount):
             for index in range(self.enemies_per_row):
                 self.enemies_lineup[enemies_lenght].setposition(x_poss + self.spacing * index, y_poss)
                 self.enemies_lineup[enemies_lenght].showturtle()
@@ -57,7 +57,8 @@ class EnemyManager:
     def SpawnAllEnemies(self):
         self._enemies.PopulateList()
 
-    def UpdateEnemiesPoss(self):
+    def UpdateEnemiesPoss(self, onResetCallback = None):
+        enemy_interator = 0
         for enemy in self._enemies.enemies_lineup:
             enemy.setx(enemy.xcor() + self._enemies_move_speed)
 
@@ -65,15 +66,28 @@ class EnemyManager:
                 self._DownRow()
             
             if(enemy.ycor() < -220 and enemy.isvisible()):
-                self.ResetLineup()
+                self.ResetLineup(onResetCallback=onResetCallback)
+            
+            if(not enemy.isvisible()):
+                enemy_interator += 1
+                if(enemy_interator == len(self._enemies.enemies_lineup)):
+                    self.ResetLineup(onResetCallback=onResetCallback)
                 
     def _DownRow(self):
         for enemy in self._enemies.enemies_lineup:
             enemy.sety(enemy.ycor() - self._enemies.spacing)
             self._enemies_move_speed *= -1
     
-    def ResetLineup(self):
+    def ResetLineup(self, onResetCallback = None):
         self._enemies.ResetLineup()
+
+        if(onResetCallback):
+            onResetCallback()
+
+    def IncrementEmenySpeed(self, value: float):
+        self._enemies_move_speed += value
+        if(self._enemies_move_speed < 0):
+            self._enemies_move_speed *= -1
 
     def CheckCollisionInFrame(self, callbacks: Tuple, *objects):
         index_counter = 0
